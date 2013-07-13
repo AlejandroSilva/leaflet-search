@@ -35,14 +35,15 @@
 		}
 
 		function filterJSONCall(rawjson) {	//callback that remap fields name
+			console.log( rawjson );
 			var json = {},
-				key, loc, disp = [];
+				name, loc, split_name = [];
 
 			for(var i in rawjson){
-				disp = rawjson[i].display_name.split(',');	
-				key = disp[0] +', '+ disp[1];
+				split_name = rawjson[i].split_namelay_name.split(',');	
+				name = split_name[0] +', '+ split_name[1];
 				loc = L.latLng( rawjson[i].lat, rawjson[i].lon );
-				json[key] = loc;	//key,value format
+				json[name] = loc;	//key,value format
 			}
 			console.log (json);
 			return json;
@@ -51,12 +52,12 @@
 		map.addControl( 
 			new L.Control.Search({
 				callData: searchByAjax,			// make the ajax call to nominatim
-				filterJSON: filterJSONCall,		// filter the nominatim result into a leaflet one
+				filterJSON: filterJSONCall,		// filter the result to a leaflet legible format
 				minLength: 3,					// minimun words to start a search
 				autoType: true,					// fill the input with the first result
 				text:'Placeholder...',
 				markerLocation: false,			// without a marker on the location
-				animateLocation: true,			// without a 'animated circle' on the location
+				zoom: 13,						// default zoom on search
 				textErr: 'Ciudad no encontrada',
 				position: 'topright'
 			}) 
