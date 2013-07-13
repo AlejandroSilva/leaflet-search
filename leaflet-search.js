@@ -47,7 +47,7 @@ L.Control.Search = L.Control.extend({
 		text: 'Search...',			//placeholder value	
 		textCancel: 'Cancel',		//title in cancel button
 		textErr: 'Location not found',	//error message
-		position: 'topleft',
+		position: 'topleft',		// 'topleft', 'topright', 'bottomleft', 'bottomright'
 		//TODO add option collapsed, like control.layers
 	},
 //FIXME option condition problem {autoCollapse: true, markerLocation: true} not show location
@@ -142,7 +142,7 @@ L.Control.Search = L.Control.extend({
 		this._hideTooltip();
 		this.cancel();
 		this._alert.style.display = 'none';
-		this._input.style.display = 'none';
+		//this._input.style.display = 'none';	// dont' minimize
 		this._input.blur();
 		this._cancel.style.display = 'none';
 		L.DomUtil.removeClass(this._container, 'search-exp');		
@@ -706,18 +706,18 @@ var SearchMarker = L.Marker.extend({
 
 	onAdd: function (map) {
 		L.Marker.prototype.onAdd.call(this, map);
-		map.addLayer(this._circleLoc);
+		//map.addLayer(this._circleLoc);
 		this.hide();
 	},
 
 	onRemove: function (map) {
 		L.Marker.prototype.onRemove.call(this, map);
-		map.removeLayer(this._circleLoc);
+		//map.removeLayer(this._circleLoc);
 	},	
 	
 	setLatLng: function (latlng) {
 		L.Marker.prototype.setLatLng.call(this, latlng);
-		this._circleLoc.setLatLng(latlng);
+		//this._circleLoc.setLatLng(latlng);
 		return this;
 	},
 	
