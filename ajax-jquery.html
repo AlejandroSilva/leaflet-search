@@ -1,0 +1,66 @@
+<!DOCTYPE html> 
+<head> 
+	<title>Test</title> 
+
+	<!-- <link rel="stylesheet" href="/leaflet/leaflet.css"/> -->
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css" />
+	<link rel="stylesheet" href="leaflet-search.css"/>
+	<link rel="stylesheet" href="style.css"/>
+	<!-- JS -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+	<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+	<script src="leaflet-search.js"></script>
+</head>
+
+<body>
+	<div id="map"></div>
+
+	<script>
+		var map = new L.Map('map', {zoom: 9, center: new L.latLng([41.575730,13.002411]) });
+		map.addLayer(new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'));	//base layer
+
+		function searchByAjax(text, callResponse){//callback for 3rd party ajax requests
+			console.log('ajax call: '+text);
+			$.ajax({
+				url: 'http://nominatim.openstreetmap.org/search',	//read comments in search.php for more information usage
+				type: 'GET',
+				data: {
+					q: text,
+					format: 'json',
+					limit: 5
+				},
+				dataType: 'json',
+				success: callResponse
+			});
+		}
+
+		function filterJSONCall(rawjson) {	//callback that remap fields name
+			var json = {},
+				key, loc, disp = [];
+
+			for(var i in rawjson){
+				disp = rawjson[i].display_name.split(',');	
+				key = disp[0] +', '+ disp[1];
+				loc = L.latLng( rawjson[i].lat, rawjson[i].lon );
+				json[key] = loc;	//key,value format
+			}
+			console.log (json);
+			return json;
+		}
+
+		map.addControl( 
+			new L.Control.Search({
+				callData: searchByAjax,			// make the ajax call to nominatim
+				filterJSON: filterJSONCall,		// filter the nominatim result into a leaflet one
+				minLength: 3,					// minimun words to start a search
+				autoType: true,					// fill the input with the first result
+				text:'Placeholder...',
+				markerLocation: false,			// without a marker on the location
+				animateLocation: true,			// without a 'animated circle' on the location
+				textErr: 'Ciudad no encontrada',
+				position: 'topright'
+			}) 
+		);
+	</script>
+</body>
+</html>

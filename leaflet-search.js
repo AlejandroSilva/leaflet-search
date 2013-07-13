@@ -184,7 +184,7 @@ L.Control.Search = L.Control.extend({
 		input.value = '';
 		input.autocomplete = 'off';
 		input.placeholder = text;
-		input.style.display = 'none';
+		input.style.display = 'block';
 		
 		L.DomEvent
 			.disableClickPropagation(input)
